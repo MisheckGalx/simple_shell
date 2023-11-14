@@ -86,7 +86,7 @@ size_t ky_strcspn(const char *str1, const char *str2)
 
 	for (s1 = str1; *s1 != '\0'; s1++)
 	{
-		for (prt = str2; *ptr != '\0'; ptr++)
+		for (ptr = str2; *ptr != '\0'; ptr++)
 		{
 			if (*s1 == *ptr)
 			{

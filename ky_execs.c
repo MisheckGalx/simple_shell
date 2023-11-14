@@ -1,4 +1,5 @@
-#include "stdlib.h"
+#include "shell.h"
+
 /**
  * ky_tokenize - Tokenizes the line into an array of strings
  * @line: The command line
@@ -24,11 +25,11 @@ char **ky_tokenize(char *line)
  * ky_find_command - Finds the command in the current directory or PATH
  * @argv: The array of command and arguments
  *
- * Return: The full path to the command or NULL if command notfound
+ * Return: The full path to the command or NULL if command not found
  */
 char *ky_find_command(char **argv)
 {
-	/* check if command is an absolute path */
+	/* Check if command is an absolute path */
 	if (argv[0][0] == '/')
 	{
 		if (access(argv[0], F_OK) != -1)
@@ -43,7 +44,7 @@ char *ky_find_command(char **argv)
 		}
 	}
 
-	/* check if command exists in current directory or PATH */
+	/* Check if command exists in current directory or PATH */
 	if (access(argv[0], F_OK) == -1)
 	{
 		char *path = getenv("PATH");
@@ -52,29 +53,30 @@ char *ky_find_command(char **argv)
 
 		while (directory != NULL)
 		{
-			char *command_path = malloc(ky_strlen(directory) +
-					ky_strlen(argv[0] + 2);
-					ky_strcpy(command_path, directory);
-					ky_strcat(command_path, "/");
-					ky_strcat(command_path, argv[0]);
-					if (access(command_path, F_OK) != -1)
-					{
-						free(path_copy);
-						return (command_path);
-					}
-					free(command_path);
-					directory = ky_strtok(NULL, ":");
-					}
-					free(path_copy);
-					}
-					return (NULL);
-					}
+			char *command_path = malloc(strlen(directory) +
+					strlen(argv[0]) + 2);
+			ky_strcpy(command_path, directory);
+			ky_strcat(command_path, "/");
+			ky_strcat(command_path, argv[0]);
+			if (access(command_path, F_OK) != -1)
+			{
+				free(path_copy);
+				return (command_path);
+			}
+			free(command_path);
+			directory = ky_strtok(NULL, ":");
+		}
+		free(path_copy);
+	}
+	return (NULL);
+}
+
 /**
-* ky_execute - Executes the command
-* @argv: The array of command and arguments
-*
-* Return: Void
-*/
+ * ky_execute - Executes the command
+ * @argv: The array of command and arguments
+ *
+ * Return: Void
+ */
 void ky_execute(char **argv)
 {
 	pid_t pid;

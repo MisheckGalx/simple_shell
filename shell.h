@@ -19,7 +19,7 @@ void ky_execute(char **argv);
 void ky_ex(char *line);
 int main(void);
 int ky_exit(char **argv);
-int ky_env(cahr **argv);
+int ky_env(char **argv);
 
 /****CUSTOM STRINGS*****/
 
