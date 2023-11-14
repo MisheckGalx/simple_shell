@@ -1,17 +1,17 @@
 #include "shell.h"
 /**
- * ky_pr - Prints the shell prompt 
- * @void: No arguments 
+ * ky_pr - Prints the shell prompt
+ * @void: No arguments
  *
  * Return: Void
  */
 void ky_pr(void)
 {
 	if (isatty(STDIN_FILENO))
-		write(STDOUT_FILENO,"$ ", 2);
+		write(STDOUT_FILENO, "$ ", 2);
 }
 
-/*
+/**
  * ky_ex - Executes the command entered by the user
  * @line: The command entered by the user
  *
