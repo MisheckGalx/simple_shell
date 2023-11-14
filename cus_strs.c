@@ -17,7 +17,7 @@ char *ky_strcpy(char *dest, const char *src)
 		dest++;
 		src++;
 	}
-	
+
 	*dest = '\0';
 	return (start);
 }
@@ -60,7 +60,7 @@ char *ky_strcat(char *dest, const char *src)
  */
 int ky_strcmp(const char *s1, const char *s2)
 {
-	while( *s1 && (*s1 == *s2))
+	while (*s1 && (*s1 == *s2))
 	{
 		s1++;
 		s2++;
@@ -88,7 +88,7 @@ size_t ky_strcspn(const char *str1, const char *str2)
 	{
 		for (prt = str2; *ptr != '\0'; ptr++)
 		{
-			if( *s1 == *ptr)
+			if (*s1 == *ptr)
 			{
 				return (s1 - str1);
 			}
