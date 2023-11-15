@@ -9,6 +9,7 @@ extern char **environ;
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <ctype.h>
 
 /****FUNCTIONS******/
 
@@ -20,6 +21,7 @@ void ky_ex(char *line);
 int main(void);
 int ky_exit(char **argv);
 int ky_env(char **argv);
+char *ky_tr_spaces(char *str);
 
 /****CUSTOM STRINGS*****/
 

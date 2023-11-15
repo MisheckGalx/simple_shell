@@ -22,7 +22,10 @@ void ky_ex(char *line)
 	char **argv;
 	char *command;
 
-	line[ky_strcspn(line, "\n")] = 0;
+	line[ky_strcspn(line, "\n")] = '\0';
+
+	line = ky_tr_spaces(line);
+
 	if (ky_strlen(line) == 0)
 	{
 		free(line);
@@ -84,4 +87,26 @@ int main(void)
 	free(line);
 	return (0);
 }
+/**
+ * ky_tr_spaces - function removes trailing from cli
+ * @str: strings
+ * Return: character
+ */
+char *ky_tr_spaces(char *str)
+{
+	char *end;
 
+	/* Remove leading spaces */
+	while (isspace((unsigned char)*str))
+		str++;
+
+	/* Remove trailing spaces */
+	end = str + strlen(str) - 1;
+	while (end > str && isspace((unsigned char)*end))
+		end--;
+
+	/* Write new null terminator */
+	*(end + 1) = '\0';
+
+	return (str);
+}
