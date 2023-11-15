@@ -9,13 +9,13 @@
 char **ky_tokenize(char *line)
 {
 	char **argv = malloc(64 * sizeof(char *));
-	char *token = ky_strtok(line, " ");
+	char *token = strtok(line, " ");
 	int i;
 
 	for (i = 0; token != NULL; i++)
 	{
 		argv[i] = token;
-		token = ky_strtok(NULL, " ");
+		token = strtok(NULL, " ");
 	}
 	argv[i] = NULL;
 	return (argv);
