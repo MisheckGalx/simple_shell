@@ -35,7 +35,6 @@ char *ky_find_command(char **argv)
 		if (access(argv[0], F_OK) != -1)
 		{
 			/* Command found */
-			free(argv);
 			return (ky_strdup(argv[0]));
 		}
 		else
