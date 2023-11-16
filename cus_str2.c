@@ -1,7 +1,7 @@
 #include "shell.h"
 
 /**
- * ky_getline - Read a line from the standard input
+ * ky_getliine - Read a line from the standard input
  * @lineptr: Pointer to the buffer
  * @n: Number of characters to read
  * @stream: The input stream to red from
