@@ -10,7 +10,6 @@ void ky_pr(void)
 	if (isatty(STDIN_FILENO))
 		write(STDOUT_FILENO, "$ ", 2);
 }
-
 /**
  * ky_ex - Executes the command entered by the user
  * @line: The command entered by the user
@@ -28,10 +27,8 @@ void ky_ex(char *line)
 
 	if (ky_strlen(line) == 0)
 	{
-		free(line);
 		return;
 	}
-
 	argv = ky_tokenize(line);
 	if (ky_exit(argv))
 	{
@@ -40,7 +37,7 @@ void ky_ex(char *line)
 	}
 	if (ky_env(argv))
 	{
-		free(line);
+		free(argv);
 		return;
 	}
 	command = ky_find_command(argv);
@@ -74,19 +71,19 @@ int main(void)
 	while (1)
 	{
 		ky_pr();
-		read = ky_getline(&line, &len, stdin);
+		read = getline(&line, &len, stdin);
 		if (read == -1) /* End of the file (Ctrl+D) */
 		{
 			if (isatty(STDIN_FILENO))
 				write(STDOUT_FILENO, "\n", 1);
-			free(line);
 			exit(EXIT_SUCCESS);
 		}
 		ky_ex(line);
+
 	}
-	free(line);
 	return (0);
 }
+
 /**
  * ky_tr_spaces - function removes trailing from cli
  * @str: strings

@@ -1,39 +1,6 @@
 #include "shell.h"
 
 /**
- * ky_getline - Read a line from the standard input
- * @lineptr: Pointer to the buffer
- * @n: Number of characters to read
- * @stream: The input stream to red from
- *
- * Return: The number of characters read, or -1 on failure
- */
-ssize_t ky_getline(char **lineptr, size_t *n, FILE *stream)
-{
-	char *buffer;
-	ssize_t characters;
-
-	buffer = malloc(1024);
-	if (buffer == NULL)
-	{
-		return (-1);
-	}
-
-	characters = read(fileno(stream), buffer, 1024);
-	if (characters == -1)
-	{
-		free(buffer);
-		return (-1);
-	}
-
-	buffer[characters] = '\0';
-	*lineptr = buffer;
-	*n = characters;
-
-	return (characters);
-}
-
-/**
  * ky_strlen - Compute length of string
  * @s: The string to be sized
  *
@@ -98,7 +65,3 @@ char *ky_strdup(const char *s)
 
 	return ((char *) memcpy(new, s, len));
 }
-
-
-
-

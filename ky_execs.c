@@ -9,15 +9,19 @@
 char **ky_tokenize(char *line)
 {
 	char **argv = malloc(64 * sizeof(char *));
-	char *token = strtok(line, " ");
+	char *copy_line = ky_strdup(line);
+
+	char *token = strtok(copy_line, " \"");
 	int i;
 
 	for (i = 0; token != NULL; i++)
 	{
-		argv[i] = token;
-		token = strtok(NULL, " ");
+		argv[i] = ky_strdup(token);
+		token = strtok(NULL, " \"");
 	}
 	argv[i] = NULL;
+
+	free(copy_line);
 	return (argv);
 }
 
@@ -39,6 +43,7 @@ char *ky_find_command(char **argv)
 		}
 		else
 		{
+			free(argv);
 			return (NULL);
 		}
 	}
@@ -84,7 +89,7 @@ void ky_execute(char **argv)
 	pid = fork();
 	if (pid == 0) /* Child process */
 	{
-		if (execve(argv[0], argv, NULL) == -1)
+		if (execvp(argv[0], argv) == -1)
 		{
 			perror(argv[0]);
 		}
@@ -101,6 +106,7 @@ void ky_execute(char **argv)
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 	}
 }
+
 /**
  * ky_exit - Exit the shell
  * @argv: The command and its arguments

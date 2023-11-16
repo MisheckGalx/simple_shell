@@ -29,8 +29,8 @@ char *ky_strcpy(char *dest, const char *src);
 char *ky_strcat(char *dest, const char *src);
 int ky_strcmp(const char *s1, const char *s2);
 size_t ky_strcspn(const char *str1, const char *str2);
-ssize_t ky_getline(char **lineptr, size_t *n, FILE *stream);
 size_t ky_strlen(const char *s);
+char *ky_getline(char *buffer, size_t *size, FILE *stream);
 char *ky_strtok(char *str, const char *delim);
 char *ky_strdup(const char *s);
 
