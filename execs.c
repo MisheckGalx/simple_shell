@@ -1,4 +1,5 @@
 #include "shell.h"
+#define BUFFER_SIZE 1024
 /**
  * ky_execute_command - Forks and executes a command.
  * @cmd_path: Full path to the command to execute.
@@ -53,3 +54,30 @@ int ky_handle_command(char *dir, char **params)
 
 	return (-1);
 }
+
+/**
+ * ky_getline - reads a line from the standard input
+ * @line: pointer to a pointer to the line read from the standard input
+ * @length: pointer to a size_t for the length of the line
+ * @stream: FILE pointer for the input stream
+ *
+ * Return: the number of bytes read
+ */
+ssize_t ky_getline(char **line, size_t *length, FILE *stream)
+{
+	char *buffer = malloc(BUFFER_SIZE);
+	ssize_t bytesRead;
+
+	if (buffer == NULL)
+	{
+		perror("Unable to allocate buffer");
+		exit(1);
+	}
+
+	bytesRead = getline(line, length, stream);
+
+	free(buffer);
+
+	return (bytesRead);
+}
+

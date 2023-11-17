@@ -69,6 +69,7 @@ int ky_execute_cmd(char **params)
 			dir = strtok(NULL, ":");
 		}
 		printf("shell: %s: command not found\n", params[0]);
+		free(path_copy);
 		return (0);
 	}
 }
@@ -91,7 +92,7 @@ int main(void)
 		if (interactive)
 			write(STDOUT_FILENO, "$ ", 2);
 
-		bytesRead = getline(&cmd, &cmdLength, stdin);
+		bytesRead = ky_getline(&cmd, &cmdLength, stdin);
 		if (bytesRead == -1)
 			break;
 		if (cmd[0] == '\n') /* If input is only a newline, continue */
