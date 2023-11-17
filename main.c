@@ -41,7 +41,7 @@ int ky_execute_cmd(char **params)
 
 		sprintf(cmd_path, "%s/%s", dir, params[0]);
 
-		if (access(cmd_path, F_OK) == 0)
+		if (access(cmd_path, F_OK) == 0 && access(cmd_path, X_OK) == 0)
 		{
 			pid_t pid = fork();
 
