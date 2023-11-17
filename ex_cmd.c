@@ -13,16 +13,8 @@ int ky_execute_cmd(char **params)
 	}
 	if (strcmp(params[0], "exit") == 0)
 	{
-		if (params[1] != NULL)
-		{
-			int status = atoi(params[1]);
-
-			exit(status);
-		}
-		else
-		{
-			exit(0);
-		}
+		hndl_exit(params);
+		return (0);
 	}
 	if (params[0][0] == '/')
 	{

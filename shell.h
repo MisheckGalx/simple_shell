@@ -19,4 +19,6 @@ int ky_execute_full_path(char **params);
 int ky_execute_in_path(char **params);
 int ky_execute_command(char *cmd_path, char **params);
 ssize_t ky_getline(char **line, size_t *length, FILE *stream);
+int handle_exit_status(char *status_str);
+void hndl_exit(char **command);
 #endif /* SHELL_H */
