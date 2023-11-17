@@ -11,6 +11,19 @@ int ky_execute_cmd(char **params)
 	{
 		return (ky_print_env());
 	}
+	if (strcmp(params[0], "exit") == 0)
+	{
+		if (params[1] != NULL)
+		{
+			int status = atoi(params[1]);
+
+			exit(status);
+		}
+		else
+		{
+			exit(0);
+		}
+	}
 	if (params[0][0] == '/')
 	{
 		return (ky_execute_full_path(params));
