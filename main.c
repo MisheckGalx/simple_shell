@@ -31,53 +31,43 @@ void ky_parse_cmd(char *cmd, char **params)
  */
 int ky_execute_cmd(char **params)
 {
-	char *path = getenv("PATH");
-	char *path_copy = strdup(path);
-	char *dir = strtok(path_copy, ":");
-
-	while (dir != NULL)
+	if (params[0][0] == '/')
 	{
-		char cmd_path[1024];
-
-		sprintf(cmd_path, "%s/%s", dir, params[0]);
-
-		if (access(cmd_path, F_OK) == 0 && access(cmd_path, X_OK) == 0)
+		if (access(params[0], F_OK) == 0 && access(params[0], X_OK) == 0)
 		{
-			pid_t pid = fork();
+			return (ky_execute_command(params[0], params));
+		}
+		else
+		{
+			printf("shell: %s: command not found\n", params[0]);
+			return (0);
+		}
+	}
+	else
+	{
+		char *path = getenv("PATH");
+		char *path_copy = strdup(path);
+		char *dir = strtok(path_copy, ":");
 
-			if (pid < 0)
-			{
-				perror("fork");
-				return (1);
-			}
-			else if (pid == 0)
-			{
-				if (execve(cmd_path, params, NULL) == -1)
-				{
-					perror(params[0]);
-					exit(0);
-				}
-			}
-			else
-			{
-				int childStatus;
+		while (dir != NULL)
+		{
+			int result = ky_handle_command(dir, params);
 
-				waitpid(pid, &childStatus, 0);
-				return (1);
-			}
+			if (result != -1)
+				return (result);
+
+			dir = strtok(NULL, ":");
 		}
 
-		dir = strtok(NULL, ":");
+		printf("shell: %s: command not found\n", params[0]);
+		return (0);
 	}
-
-	printf("shell: %s: command not found\n", params[0]);
-	return (0);
 }
 
 /**
- * main - main function for the shell
+ * main - Entry point
  *
- * Return: 0 on success
+ * Return: Always 0 (Success)
  */
 int main(void)
 {
@@ -85,10 +75,12 @@ int main(void)
 	char *params[MAX_NUM_ARGS];
 	size_t cmdLength = 0;
 	ssize_t bytesRead;
+	int interactive = isatty(0);
 
 	while (1)
 	{
-		write(STDOUT_FILENO, "$ ", 2);
+		if (interactive)
+			write(STDOUT_FILENO, "$ ", 2);
 
 		bytesRead = getline(&cmd, &cmdLength, stdin);
 		if (bytesRead == -1)
