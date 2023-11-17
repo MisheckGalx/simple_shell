@@ -1,109 +1,87 @@
 #include "shell.h"
+
+#define MAX_NUM_ARGS 10
+
 /**
- * ky_pr - Prints the shell prompt
- * @void: No arguments
+ * ky_parse_cmd - a function that parses the command
+ * @cmd: the command
+ * @params: parameters for the command
  *
- * Return: Void
+ * Return: nothing
  */
-void ky_pr(void)
+void ky_parse_cmd(char *cmd, char **params)
 {
-	if (isatty(STDIN_FILENO))
-		write(STDOUT_FILENO, "$ ", 2);
-}
-/**
- * ky_ex - Executes the command entered by the user
- * @line: The command entered by the user
- *
- * Return: Void
- */
-void ky_ex(char *line)
-{
-	char **argv;
-	char *command;
+	int i;
 
-	line[ky_strcspn(line, "\n")] = '\0';
+	for (i = 0; i < MAX_NUM_ARGS; i++)
+	{
+		params[i] = strsep(&cmd, " ");
 
-	line = ky_tr_spaces(line);
-
-	if (ky_strlen(line) == 0)
-	{
-		return;
+		if (params[i] == NULL)
+			break;
 	}
-	argv = ky_tokenize(line);
-	if (ky_exit(argv))
-	{
-		free(line);
-		exit(EXIT_SUCCESS);
-	}
-	if (ky_env(argv))
-	{
-		free(argv);
-		return;
-	}
-	command = ky_find_command(argv);
-	if (command == NULL)
-	{
-		write(STDOUT_FILENO, argv[0], ky_strlen(argv[0]));
-		write(STDOUT_FILENO, ": command not found\n", 20);
-		free(argv);
-		free(line);
-		return;
-	}
-	argv[0] = command;
-	ky_execute(argv);
-	free(command);
-	free(argv);
-	free(line);
 }
 
 /**
- * main - Entry point of the program
- * @void: No arguments
+ * ky_execute_cmd - a function that executes the command
+ * @params: parameters for the command
  *
- * Return: 0 if success, 1 otherwise
+ * Return: 1 on success, 0 on failure
+ */
+int ky_execute_cmd(char **params)
+{
+	pid_t pid = fork();
+
+	if (pid < 0)
+	{
+		perror("fork");
+		return (1);
+	}
+	else if (pid == 0)
+	{
+		execve(params[0], params, NULL);
+		perror(params[0]);
+		return (0);
+	}
+	else
+	{
+		int childStatus;
+
+		waitpid(pid, &childStatus, 0);
+		return (1);
+	}
+}
+
+/**
+ * main - main function for the shell
+ *
+ * Return: 0 on success
  */
 int main(void)
 {
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t read;
+	char *cmd = NULL;
+	char *params[MAX_NUM_ARGS];
+	size_t cmdLength = 0;
+	ssize_t bytesRead;
 
 	while (1)
 	{
-		ky_pr();
-		read = getline(&line, &len, stdin);
-		if (read == -1) /* End of the file (Ctrl+D) */
-		{
-			if (isatty(STDIN_FILENO))
-				write(STDOUT_FILENO, "\n", 1);
-			exit(EXIT_SUCCESS);
-		}
-		ky_ex(line);
+		write(STDOUT_FILENO, "$ ", 2);
 
+		bytesRead = getline(&cmd, &cmdLength, stdin);
+		if (bytesRead == -1)
+			break;
+		cmd[bytesRead - 1] = '\0';
+		ky_parse_cmd(cmd, params);
+
+		if (strcmp(params[0], "exit") == 0)
+			break;
+
+		if (ky_execute_cmd(params) == 0)
+			break;
 	}
+
+	free(cmd);
+
 	return (0);
-}
-
-/**
- * ky_tr_spaces - function removes trailing from cli
- * @str: strings
- * Return: character
- */
-char *ky_tr_spaces(char *str)
-{
-	char *end;
-
-	/* Remove leading spaces */
-	while (isspace((unsigned char)*str))
-		str++;
-
-	/* Remove trailing spaces */
-	end = str + strlen(str) - 1;
-	while (end > str && isspace((unsigned char)*end))
-		end--;
-
-	/* Write new null terminator */
-	*(end + 1) = '\0';
-
-	return (str);
 }

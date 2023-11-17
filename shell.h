@@ -1,37 +1,16 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-extern char **environ;
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <sys/types.h>
 #include <sys/wait.h>
-#include <ctype.h>
 
-/****FUNCTIONS******/
+#define MAX_NUM_ARGS 10
 
-void ky_pr(void);
-char **ky_tokenize(char *line);
-char *ky_find_command(char **argv);
-void ky_execute(char **argv);
-void ky_ex(char *line);
-int main(void);
-int ky_exit(char **argv);
-int ky_env(char **argv);
-char *ky_tr_spaces(char *str);
-
-/****CUSTOM STRINGS*****/
-
-char *ky_strcpy(char *dest, const char *src);
-char *ky_strcat(char *dest, const char *src);
-int ky_strcmp(const char *s1, const char *s2);
-size_t ky_strcspn(const char *str1, const char *str2);
-size_t ky_strlen(const char *s);
-char *ky_getline(char *buffer, size_t *size, FILE *stream);
-char *ky_strtok(char *str, const char *delim);
-char *ky_strdup(const char *s);
+/* Function Prototypes */
+void ky_parse_cmd(char *cmd, char **params);
+int  ky_execute_cmd(char **params);
 
 #endif /* SHELL_H */
