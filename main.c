@@ -52,9 +52,11 @@ int ky_execute_cmd(char **params)
 			}
 			else if (pid == 0)
 			{
-				execve(cmd_path, params, NULL);
-				perror(params[0]);
-				return (0);
+				if (execve(cmd_path, params, NULL) == -1)
+				{
+					perror(params[0]);
+					exit(0);
+				}
 			}
 			else
 			{
@@ -86,7 +88,7 @@ int main(void)
 
 	while (1)
 	{
-		write(STDOUT_FILENO, "#cisfun$ ", 9);
+		write(STDOUT_FILENO, "$ ", 2);
 
 		bytesRead = getline(&cmd, &cmdLength, stdin);
 		if (bytesRead == -1)
