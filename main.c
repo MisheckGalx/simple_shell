@@ -71,6 +71,8 @@ int main(void)
 		bytesRead = getline(&cmd, &cmdLength, stdin);
 		if (bytesRead == -1)
 			break;
+		if (cmd[0] == '\n')
+			continue;
 		cmd[bytesRead - 1] = '\0';
 		ky_parse_cmd(cmd, params);
 
