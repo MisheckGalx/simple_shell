@@ -11,14 +11,14 @@
  */
 void ky_parse_cmd(char *cmd, char **params)
 {
-	int i;
+	int i = 0;
 
-	for (i = 0; i < MAX_NUM_ARGS; i++)
+	params[i] = strtok(cmd, " ");
+
+	while (params[i] != NULL)
 	{
-		params[i] = strsep(&cmd, " ");
-
-		if (params[i] == NULL)
-			break;
+		i++;
+		params[i] = strtok(NULL, " ");
 	}
 }
 
