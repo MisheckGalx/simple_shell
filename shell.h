@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 
 #define MAX_NUM_ARGS 10
+extern char **environ;
 
 /* Function Prototypes */
 void ky_parse_cmd(char *cmd, char **params);
