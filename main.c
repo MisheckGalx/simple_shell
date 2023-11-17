@@ -13,6 +13,7 @@ void ky_parse_cmd(char *cmd, char **params)
 {
 	int i = 0;
 
+	/* split command into separate strings */
 	params[i] = strtok(cmd, " ");
 
 	while (params[i] != NULL)
@@ -30,26 +31,45 @@ void ky_parse_cmd(char *cmd, char **params)
  */
 int ky_execute_cmd(char **params)
 {
-	pid_t pid = fork();
+	char *path = getenv("PATH");
+	char *path_copy = strdup(path);
+	char *dir = strtok(path_copy, ":");
 
-	if (pid < 0)
+	while (dir != NULL)
 	{
-		perror("fork");
-		return (1);
-	}
-	else if (pid == 0)
-	{
-		execve(params[0], params, NULL);
-		perror(params[0]);
-		return (0);
-	}
-	else
-	{
-		int childStatus;
+		char cmd_path[1024];
 
-		waitpid(pid, &childStatus, 0);
-		return (1);
+		sprintf(cmd_path, "%s/%s", dir, params[0]);
+
+		if (access(cmd_path, F_OK) == 0)
+		{
+			pid_t pid = fork();
+
+			if (pid < 0)
+			{
+				perror("fork");
+				return (1);
+			}
+			else if (pid == 0)
+			{
+				execve(cmd_path, params, NULL);
+				perror(params[0]);
+				return (0);
+			}
+			else
+			{
+				int childStatus;
+
+				waitpid(pid, &childStatus, 0);
+				return (1);
+			}
+		}
+
+		dir = strtok(NULL, ":");
 	}
+
+	printf("shell: %s: command not found\n", params[0]);
+	return (0);
 }
 
 /**
@@ -66,12 +86,12 @@ int main(void)
 
 	while (1)
 	{
-		write(STDOUT_FILENO, "$ ", 2);
+		write(STDOUT_FILENO, "#cisfun$ ", 9);
 
 		bytesRead = getline(&cmd, &cmdLength, stdin);
 		if (bytesRead == -1)
 			break;
-		if (cmd[0] == '\n')
+		if (cmd[0] == '\n') /* If input is only a newline, continue */
 			continue;
 		cmd[bytesRead - 1] = '\0';
 		ky_parse_cmd(cmd, params);
