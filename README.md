@@ -48,4 +48,4 @@ Acknowledgments
 We'd like to acknowledge the ALX Software Engineering program for providing the opportunity to work on this project and learn about systems programming and shell development.
 
 Contact
-For any questions or feedback, feel free to reach out to us at waynerumbidzai@gmail.com
+For any questions or feedback, feel free to reach out to us at misheckgogo45@gmail.com waynerumbidzai@gmail.com
